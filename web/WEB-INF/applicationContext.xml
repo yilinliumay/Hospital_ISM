@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/hospital"></property>
+        <property name="username" value="root"/>
+        <property name="password" value="chenmay0921610"/>
+    </bean>
+    <!-- session factory -->
+    <!-- session factory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+                <!-- 这个是有了之后，就算你再mysql没有表，运行也不会出错，因为有它会自动新建表，已存在不会新建 -->
+
+
+
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+
+                <value>classpath:Entity/Users.hbm.xml</value>
+                <value>classpath:Entity/Users.hbm.xml</value>
+                <value>classpath:Entity/Patient.hbm.xml</value>
+                <value>classpath:Entity/Doctor.hbm.xml</value>
+            </list>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+
+                <value>Entity.Users</value>
+                <value>Entity.Patient</value>
+                <value>Entity.Doctor</value>
+
+            </list>
+        </property>
+
+    </bean>
+
+
+    <!--Action-->
+    <bean id="usersAction" class="action.UsersAction" scope="prototype">
+        <property name="usersService" ref="usersService"/>
+    </bean>
+
+    <bean id="usersService" class="service.impl.UsersServiceImpl">
+    <property name="usersDao" ref="usersDao"/>
+    </bean>
+
+    <bean id="usersDao" class="Dao.Impl.UsersDaoImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+
+        <property name="sessionFactory" ref="sessionFactory"></property>
+
+    </bean>
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+
+    <bean id="patientInAction" class="action.PatientInAction" scope="prototype">
+        <property name="patientService" ref="patientService"/>
+    </bean>
+
+    <bean id="patientService" class="service.impl.PatientServiceImpl">
+        <property name="patientDao" ref="patientDao"/>
+    </bean>
+
+
+    <bean id="patientDao" class="Dao.Impl.PatientDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+</beans>

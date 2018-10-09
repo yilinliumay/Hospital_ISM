@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.springframework.web-3.0.5.RELEASE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/org.springframework.web-3.0.5.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
